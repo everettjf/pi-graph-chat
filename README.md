@@ -292,3 +292,5 @@ See [`docs/CORE_TESTING.md`](./docs/CORE_TESTING.md) for manual acceptance and
 ## License
 
 [MIT](./LICENSE) © Everett
+
+[Discord](https://discord.gg/eGzEaP6TzR)

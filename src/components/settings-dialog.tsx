@@ -361,6 +361,7 @@ export function SettingsDialog({
 
         {error && <p className="mt-3 text-xs text-[var(--danger)]">{error}</p>}
         <div className="mt-5 flex justify-end gap-2">
+          <a href="https://discord.gg/eGzEaP6TzR" target="_blank" rel="noopener noreferrer" className="mr-auto self-center text-sm text-[var(--accent-fg)]">Discord</a>
           <Button variant="ghost" onClick={() => setSettingsOpen(false)}>
             {t("settings.cancel")}
           </Button>

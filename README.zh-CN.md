@@ -215,3 +215,5 @@ bun run test:all   # 以上全部
 ## License
 
 [MIT](./LICENSE) © Everett
+
+[Discord](https://discord.gg/eGzEaP6TzR)
