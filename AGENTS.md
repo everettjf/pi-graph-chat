@@ -11,7 +11,7 @@ Pi Graph Chat is a personal, local-first React/TypeScript learning workspace bui
 - `packages/bun-menubar/`: macOS menu bar packaging. A Swift shell (`shell/`) runs the `bun build --compile` server from `Contents/MacOS/server`; `bun run app:build` reads `menubar.config.ts` and writes `dist-app/Pi Graph Chat.app`. macOS only.
 - `tests/e2e/`: Playwright workflows, including the seeded Pi session and project fixtures. Specs share one server and database, so `workers` stays at 1 and every spec leaves only the example graph active.
 - `docs/`: data format and manual acceptance guide.
-- `scripts/`: launcher, provider smoke test, and seeding.
+- `scripts/`: launcher, provider smoke test, seeding, and the Homebrew cask generator.
 
 Unit tests sit next to the code they cover (`*.test.ts`, `*.test.tsx`).
 
@@ -35,6 +35,7 @@ Run Vitest through the package scripts. The scripts force Bun's runtime because 
 - Signing and notarization settings are `sign` and `notarize` in `menubar.config.ts`, overridden by `MENUBAR_SIGN_IDENTITY`, `MENUBAR_NOTARY_PROFILE`, and `MENUBAR_NOTARY_PASSWORD`. Never write a certificate name, Team ID, or password into the repository; the password is passed to `notarytool` as `@env:`, not on the command line.
 - The default entitlements in `packages/bun-menubar/src/sign.ts` are the ones Bun's JIT needs under the hardened runtime; a signed build must still complete a demo answer and load a `~/.pi` extension.
 - Test with a copy of the config on another port and `openOnLaunch: false`; the real app shares port 4317 with `bun run launch`. Clean up `~/Library/Application Support/<name>` and `~/Library/Logs/<name>` after probe apps.
+- Releases: tag `v<version>`, attach `dist-app/Pi-Graph-Chat-<version>.zip` (name must match the cask URL), then run `bun scripts/homebrew-cask.mjs` and push the cask in `everettjf/homebrew-tap`. The cask's `zap` must never touch `~/.pi`.
 
 ## Pi
 

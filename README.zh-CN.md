@@ -112,13 +112,19 @@ bun run launch
 
 ### macOS 菜单栏 app
 
-每个 [release](https://github.com/everettjf/pi-graph-chat/releases/latest) 都附带已签名并公证的 Apple Silicon 版本：解压后把 `Pi Graph Chat.app` 拖进「应用程序」即可运行。自己构建：
+最省事的安装方式是 Homebrew：
+
+```bash
+brew install --cask everettjf/tap/pi-graph-chat
+```
+
+每个 [release](https://github.com/everettjf/pi-graph-chat/releases/latest) 也都附带已签名并公证的 Apple Silicon 版本：解压后把 `Pi Graph Chat.app` 拖进「应用程序」即可运行。自己构建：
 
 ```bash
 bun run app:build
 ```
 
-这会把同一个服务打包成菜单栏 app，输出到 `dist-app/Pi Graph Chat.app`（另有一份 zip）：它常驻状态栏、不显示 Dock 图标，数据保存在 `~/Library/Application Support/Pi Graph Chat`，日志写到 `~/Library/Logs/Pi Graph Chat/server.log`，服务崩溃会自动重启，点击即打开浏览器。打包逻辑在 [`packages/bun-menubar`](./packages/bun-menubar/README.md)，配置在 [`menubar.config.ts`](./menubar.config.ts)。第一次构建需要 Xcode 命令行工具来编译原生壳。
+这会把同一个服务打包成菜单栏 app，输出到 `dist-app/Pi Graph Chat.app`（另有 `Pi-Graph-Chat-<版本>.zip`）：它常驻状态栏、不显示 Dock 图标，数据保存在 `~/Library/Application Support/Pi Graph Chat`，日志写到 `~/Library/Logs/Pi Graph Chat/server.log`，服务崩溃会自动重启，点击即打开浏览器。打包逻辑在 [`packages/bun-menubar`](./packages/bun-menubar/README.md)，配置在 [`menubar.config.ts`](./menubar.config.ts)。第一次构建需要 Xcode 命令行工具来编译原生壳。
 
 默认构建是 ad-hoc 签名，只能在构建它的机器上打开。要分发给别人，需要签名和公证：
 
@@ -139,6 +145,14 @@ bun run app:build
    ```
 
    构建会把 zip 提交给 Apple、等待结果、把票据 staple 到 app 里，再重新打 zip。给 CLI 传 `--skip-notarize` 可跳过这一步。同样的设置也可以写在 `menubar.config.ts` 的 `sign` 和 `notarize` 里；密码只会从 `MENUBAR_NOTARY_PASSWORD` 读取。
+
+3. 发布：把 `dist-app/Pi-Graph-Chat-<版本>.zip` 上传到 GitHub release，然后更新 [everettjf/homebrew-tap](https://github.com/everettjf/homebrew-tap) 里的 cask：
+
+   ```bash
+   bun scripts/homebrew-cask.mjs   # 把 Casks/pi-graph-chat.rb 写进本机的 tap 检出
+   ```
+
+   版本号来自 `package.json`，sha256 来自 zip；之后在 tap 里提交并推送。
 
 app 和 `bun run launch` 一样使用 4317 端口，两者不要同时运行。
 

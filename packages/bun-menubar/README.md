@@ -47,7 +47,7 @@ export default defineConfig({
 ```
 
 ```bash
-bunx bun-menubar build      # → dist-app/My App.app and My App.zip
+bunx bun-menubar build      # → dist-app/My App.app and My-App-1.0.0.zip
 ```
 
 The first build compiles the shell with `swift build` (Xcode command line

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { assembleApp } from "./build.js";
+import { assembleApp, zipName } from "./build.js";
 import { buildManifest, parseConfig } from "./config.js";
 import { executableName, renderInfoPlist } from "./plist.js";
 
@@ -70,6 +70,13 @@ describe("Info.plist", () => {
     expect(plist).toContain("<key>CFBundleIconFile</key>\n\t<string>AppIcon</string>");
     expect(renderInfoPlist(parseConfig(minimal), { hasIcon: false })).not.toContain("CFBundleIconFile");
     expect(executableName("   ")).toBe("MenuBarApp");
+  });
+});
+
+describe("zipName", () => {
+  it("versions the archive and replaces spaces so the name is URL-safe", () => {
+    expect(zipName({ name: "Pi Graph Chat", version: "0.3.0" })).toBe("Pi-Graph-Chat-0.3.0.zip");
+    expect(zipName({ name: "  Demo   App ", version: "1.0" })).toBe("Demo-App-1.0.zip");
   });
 });
 

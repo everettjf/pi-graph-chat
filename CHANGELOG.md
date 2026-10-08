@@ -2,6 +2,14 @@
 
 All notable Pi Graph Chat changes are documented here.
 
+## Unreleased
+
+### Added
+
+- Pi Graph Chat installs with `brew install --cask everettjf/tap/pi-graph-chat`.
+  `scripts/homebrew-cask.mjs` regenerates the cask from `package.json` and the
+  release zip, which `bun-menubar` now names `<Name>-<version>.zip`.
+
 ## 0.3.0 - 2026-09-30
 
 Pi Graph Chat is now a personal tool built on the Pi agent ecosystem. This

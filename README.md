@@ -150,7 +150,13 @@ bun run launch
 
 ### macOS menu bar app
 
-A signed and notarized Apple Silicon build is attached to every
+The quickest way to get the app is Homebrew:
+
+```bash
+brew install --cask everettjf/tap/pi-graph-chat
+```
+
+A signed and notarized Apple Silicon build is also attached to every
 [release](https://github.com/everettjf/pi-graph-chat/releases/latest): unzip,
 move `Pi Graph Chat.app` to Applications, and launch. To build it yourself:
 
@@ -159,7 +165,7 @@ bun run app:build
 ```
 
 This packages the same server as a menu bar app in `dist-app/Pi Graph Chat.app`
-(plus a zip): it lives in the status bar with no Dock icon, keeps its data in
+(plus `Pi-Graph-Chat-<version>.zip`): it lives in the status bar with no Dock icon, keeps its data in
 `~/Library/Application Support/Pi Graph Chat`, writes logs to
 `~/Library/Logs/Pi Graph Chat/server.log`, restarts the server if it crashes,
 and opens the browser on click. The packaging lives in
@@ -194,6 +200,17 @@ it. To sign and notarize for distribution:
    the round trip. The same settings can be written under `sign` and
    `notarize` in `menubar.config.ts`; passwords are only ever read from
    `MENUBAR_NOTARY_PASSWORD`.
+
+3. Publish: attach `dist-app/Pi-Graph-Chat-<version>.zip` to the GitHub
+   release, then update the Homebrew cask in
+   [everettjf/homebrew-tap](https://github.com/everettjf/homebrew-tap):
+
+   ```bash
+   bun scripts/homebrew-cask.mjs   # writes Casks/pi-graph-chat.rb into the local tap checkout
+   ```
+
+   It reads the version from `package.json` and the sha256 from the zip; commit
+   and push the tap afterwards.
 
 The app uses port 4317, like `bun run launch`; stop one before starting the other.
 

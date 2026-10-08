@@ -115,8 +115,13 @@ export function assembleApp(config: MenubarConfig, options: AssembleOptions): st
   return bundle;
 }
 
-export function zipApp(bundle: string, log: Logger = () => {}) {
-  const zip = bundle.replace(/\.app$/, ".zip");
+/** `<outDir>/<Name-With-Dashes>-<version>.zip`: stable, versioned, and safe in URLs (Homebrew casks point at it). */
+export function zipName(config: Pick<MenubarConfig, "name" | "version">) {
+  return `${config.name.trim().replace(/\s+/g, "-")}-${config.version}.zip`;
+}
+
+export function zipApp(config: MenubarConfig, bundle: string, log: Logger = () => {}) {
+  const zip = path.join(path.dirname(bundle), zipName(config));
   fs.rmSync(zip, { force: true });
   log(`Zipping → ${path.basename(zip)}`);
   run("ditto", ["-c", "-k", "--keepParent", bundle, zip]);
@@ -143,11 +148,11 @@ export function buildApp(config: MenubarConfig, root: string, log: Logger = () =
   const shellBinary = ensureShellBinary(log);
   const bundle = assembleApp(config, { root, shellBinary, serverBinary, log });
   signApp(config, bundle, signing, log);
-  let zip = zipApp(bundle, log);
+  let zip = zipApp(config, bundle, log);
   if (notarization) {
     notarizeApp(bundle, zip, notarization, log);
     // The stapled ticket lives inside the bundle; ship a zip that contains it.
-    if (notarization.staple) zip = zipApp(bundle, log);
+    if (notarization.staple) zip = zipApp(config, bundle, log);
   }
   fs.rmSync(work, { recursive: true, force: true });
   return { bundle, zip };
